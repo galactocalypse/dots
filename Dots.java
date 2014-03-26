@@ -1,16 +1,33 @@
 /*
 	Copyright 2014, Adarsh Yagnik (adarsh_yagnik@yahoo.com)
+	
+	This file is part of Dots.
+	 
+	Dots is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Dots is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with 2048(file: LICENSE).  If not, see <http://www.gnu.org/licenses/>.
 */
+
 import java.util.*;
 import java.io.*;
+
 class DGame{
-	BufferedReader br;
-	boolean u[][];
-	boolean l[][];
-	int o[][];
-	int size;
-	int sp1, sp2;
-	int occ;
+	private BufferedReader br;
+	private boolean u[][];
+	private boolean l[][];
+	private int o[][];
+	private int size;
+	private int sp1, sp2;
+	private int occ;
 
 	DGame(){
 		init(10);
@@ -20,7 +37,10 @@ class DGame{
 		init(size);
 	}
 	
-	void init(int sz){
+	public void init(int sz){
+		/*
+			Initializes the board.
+		*/
 		size = sz;
 		u = new boolean[size+1][size];
 		l = new boolean[size][size+1];
@@ -30,11 +50,17 @@ class DGame{
 		br = new BufferedReader(new InputStreamReader(System.in));
 	}
 	
-	boolean gameOver(){
+	public boolean gameOver(){
+		/*
+			Returns true if no more moves can be made.
+		*/
 		return (occ == size*size);
 	}
 	
-	void disp(){
+	public void disp(){
+		/*
+			Displays the board.
+		*/
 		for(int i = 0; i <= size; i++){
 			String s1 = ".";
 			String s2 = "";
@@ -59,10 +85,13 @@ class DGame{
 		}
 	}
 	
-	boolean setCell(int i, int j, int pl){
+	private boolean setCell(int i, int j, int pl){
+		/*
+			Marks cell (i, j) as occupied by player pl if it's available and closed.
+		*/
 		if(i >= size || j >= size)
 			return false;
-		if(!l[i][j] || !u[i][j] || !l[i][j+1] || !u[i+1][j])
+		if(!isClosed(i, j))
 			return false;
 		if(o[i][j] != 0)
 			return false;
@@ -71,7 +100,10 @@ class DGame{
 		return true;
 	}
 	
-	boolean mark(char dir, int i, int j){
+	private boolean mark(char dir, int i, int j){
+		/*
+			Marks a border. Dir specifies horizontal or vertical.
+		*/
 		if(dir > 90)
 			dir -= 32;
 		if(dir == 'U'){
@@ -87,13 +119,21 @@ class DGame{
 		return true;
 	}
 	
-	boolean isClosed(int i, int j){
+	private boolean isClosed(int i, int j){
+		/*
+			Returns true if cell (i, j) has borders on all sides.
+		*/
 		if(i < 0 || j < 0 || i >= size || j >= size)
 			return false;
 		return (l[i][j] && l[i][j+1] && u[i][j] && u[i+1][j]);
 	}
 	
-	boolean checkCell(int i, int j, int pl){
+	private boolean checkCell(int i, int j, int pl){
+		/*
+			Checks if a cell is closed. If yes, updates the score of player pl.
+			Called for all cells affected by a move.
+		*/
+	
 		if(isClosed(i, j)){
 			if(setCell(i, j, pl)){
 				if(pl == 1)
@@ -106,7 +146,13 @@ class DGame{
 		return false;
 	}
 	
-	boolean makeMove(char dir, int i, int j, int pl){
+	public boolean makeMove(char dir, int i, int j, int pl){
+		/*
+			Most crucial method in the program.
+			If possible, makes a move in the direction supplied as dir. 'U' refers to a horizontal line, the top border of the cell (i, j).
+			'L' refers to a vertical line, the left border of the cell (i, j).
+			Player pl is the player making the move. Scores are updated automatically. Probably not a good thing to do here.
+		*/
 		boolean scored = false;
 		if(mark(dir, i, j)){
 			scored = scored || checkCell(i, j, pl);
@@ -117,7 +163,10 @@ class DGame{
 		return scored;
 	}
 	
-	int[] parse(String s){
+	public int[] parse(String s){
+		/*
+			Converts the string input from read() to an integer array to supply arguements to makeMove()
+		*/
 		String arr[] = s.split(" ");
 		int a[] = new int[4];
 		if(arr.length != 4)
@@ -137,7 +186,10 @@ class DGame{
 		return a;
 	}
 	
-	String read(){
+	public String read(){
+		/*
+			Reads a line from standard input.
+		*/
 		if(br == null)
 			br = new BufferedReader(new InputStreamReader(System.in));
 		try{
@@ -148,17 +200,31 @@ class DGame{
 		}
 	}
 	
-	void dispScores(){
+	public void dispScores(){
+		/*
+			Displays player scores.
+		*/
 		System.out.println("Player1: " + sp1 + "\tPlayer2: " + sp2);
 	}
 	
-	int getWinner(){
+	public int getWinner(){
+		/*
+			Returns winner of the game if the game is over.
+		*/
+		if(!gameOver())
+			return -1;
 		return (sp1 == sp2)?0:(sp1 > sp2)?sp1:sp2;
 	}
 }
 public class Dots{
+	/* Driver class with overall game loop. Whatever that means. */
+	
 	public static void main(String args[]){
-		DGame d = new DGame(2);
+		System.out.println("Copyright 2014, Adarsh Yagnik (adarsh_yagnik@yahoo.com)\n"+
+			"Dots is free software, and you are welcome to "+
+			"redistribute it within the framework of the GNU Public Licence.\nRead the file LICENSE for details.\n\n");
+		
+		DGame d = new DGame(2);//parameter refers to dimension of the board
 		int turn = 1;
 		while(!d.gameOver()){
 			d.disp();
@@ -178,10 +244,14 @@ public class Dots{
 			}
 			else turn = 3 - turn;
 		}
+		
 		d.dispScores();
 		int w = d.getWinner();
-		if(w == 0)
+		if(w == -1)	
+			System.out.println("Game still in progress. Developer clueless.");
+		else if(w == 0)
 			System.out.println("Game tied!");
-		else System.out.println("Player" + w + " wins!");
+		else
+			System.out.println("Player" + w + " wins!");
 	}
 }

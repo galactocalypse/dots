@@ -215,5 +215,38 @@ class DGame{
 			return -1;
 		return (sp1 == sp2)?0:(sp1 > sp2)?sp1:sp2;
 	}
+	
+	public int[] genMove(int pl){
+		int move[] = null;
+		int cm = -1;
+		for(int i = 0; i < size; i++){
+			for(int j = 0; j < size; j++){
+				if(o[i][j] != 0)
+					continue;
+				int x = (l[i][j]?1:0) + (l[i][j+1]?1:0) + (u[i][j]?1:0) + (u[i+1][j]?1:0);
+				if(x > cm){
+					cm = x;
+					if(!l[i][j])
+						move = new int[]{'L', i, j, pl};
+					else if(!l[i][j+1])
+						move = new int[]{'L', i, j+1, pl};
+					else if(!u[i][j])
+						move = new int[]{'U', i, j, pl};
+					else if(!u[i+1][j])
+						move = new int[]{'U', i+1, j, pl};
+				}
+				if(cm == 3)
+					return move;
+			}
+		}
+		return move;
+	}
+	public void printMove(int arr[]){
+		System.out.print((char)arr[0]);
+		for(int i = 1; i < arr.length; i++)
+			System.out.print(" "+arr[i]);
+		System.out.println();
+	}
+	
 }
 

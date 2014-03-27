@@ -6,6 +6,8 @@ Description
 CLI version of the classical game of Dots. Supports only the 2-player mode at the moment(no bot).
 Made one sleepless night because everything is pointless.
 
+![Dots](snap.png "Sample")
+
 Usage
 -----
 javac Dots.java

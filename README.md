@@ -12,11 +12,11 @@ javac Dots.java
 
 java Dots
 
-Each move should be of the form: D R C P, where:
-	D: 'U' or 'L' to denote horizontal/vertical border respectively
-	R: 0-based row number
-	C: 0-based column number
-	P: player number. Out of turn moves are ignored.
+Each move should be of the form: D R C P, where:  
+	D: 'U' or 'L' to denote horizontal/vertical border respectively  
+	R: 0-based row number  
+	C: 0-based column number  
+	P: player number. Out of turn moves are ignored.  
 
 Licence
 -------

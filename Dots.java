@@ -33,6 +33,7 @@ public class Dots{
 			System.out.println("Player" + turn + "'s turn.");
 			System.out.println("Suggested move:");
 			d.printMove(d.genMove(turn));
+			System.out.println("Enter your move:");
 			int a[] = d.parse(d.read());
 			if(a == null){
 				System.out.println("Invalid input! Try again.");
